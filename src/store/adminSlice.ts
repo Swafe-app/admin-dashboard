@@ -16,6 +16,10 @@ export const resolveAdmin = createAsyncThunk('admin/admin', async () => {
       Authorization: `Bearer ${localStorage.getItem('swafe-admin')}`,
     },
   })
+  // Verify if the user is admin
+  if (result.data.data.user.role !== 'admin') {
+    return await Promise.reject('User is not admin')
+  }
   return result.data.data
 })
 

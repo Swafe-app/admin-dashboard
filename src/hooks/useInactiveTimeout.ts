@@ -22,6 +22,7 @@ const useInactiveTimeout = (active: boolean, activeTimout: number) => {
 
     if (!localStorage.getItem('swafe-admin')) {
       dispatch(logout())
+      router.push('/login')
     }
 
     // Clear the previous interval, if any
@@ -38,6 +39,7 @@ const useInactiveTimeout = (active: boolean, activeTimout: number) => {
 
       if (minute >= 5) {
         dispatch(logout())
+        router.push('/login')
         clearInterval(inactiveIntervalRef.current)
       }
     }, 60000)
