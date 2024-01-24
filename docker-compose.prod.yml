@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  admin-dashboard:
+    build: .
+    volumes:
+      - .:/app
+      - /app/node_modules
+    env_file:
+      - .env
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.admin-dashboard.rule=Host(`admin.swafe.app`)"
+      - "traefik.http.routers.admin-dashboard.entrypoints=websecure"
+      - "traefik.http.routers.admin-dashboard.tls.certresolver=myresolver"
+    networks:
+      - traefik-proxy
+
+networks:
+  traefik-proxy:
+    external: true
