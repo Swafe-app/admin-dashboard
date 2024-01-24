@@ -1,0 +1,50 @@
+.section-login {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.form-login {
+  display: flex;
+  width: 570px;
+  padding: 40px;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 10px;
+  background: var(--dark-600);
+  box-shadow: var(--elevation-main);
+}
+
+.logo-container {
+  display: flex;
+  padding: 10px;
+  margin-bottom: 35px;
+  align-items: center;
+  gap: 5px;
+  border-radius: 4px;
+  background: var(--interface6-200);
+  font-family: 'Public Sans';
+  font-size: 22px;
+}
+
+.subtitle-login {
+  color: var(--dark-50);
+  text-align: center;
+  margin-bottom: 25px;
+
+  /* body-m */
+  font-family: 'Public Sans';
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+}
+
+.input-group-login {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
