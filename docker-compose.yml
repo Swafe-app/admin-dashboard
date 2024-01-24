@@ -1,12 +1,12 @@
 version: '3'
 
 services:
-  mon-app:
+  admin-dashboard:
     build: .
     volumes:
       - .:/app
       - /app/node_modules
     ports:
       - "3002:3000"
-    environment:
-      - NODE_ENV=development
+    env_file:
+      - .env
