@@ -11,8 +11,8 @@ export type User = {
   verificationToken: string | null
   selfie: string | null
   selfieStatus: string
-  createdAt: Date
-  updatedAt: Date
+  createdAt: string
+  updatedAt: string
 }
 
 export type ListUsersResponse = {
@@ -23,7 +23,7 @@ export type ListUsersResponse = {
 
 export type DatagridUser = {
   id: string
-  date: Date
+  date: string
   name: string
   image: string
   status: string

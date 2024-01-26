@@ -27,7 +27,7 @@
 .title-logo>span {
   color: var(--primary-10);
   text-align: center;
-  font-family: 'Public Sans';
+  font-family: "Gill Sans", sans-serif;
   font-size: 24px;
   font-weight: 600;
   line-height: 24px;
@@ -39,7 +39,7 @@
   margin-bottom: 20px;
 
   /* body-m */
-  font-family: 'Public Sans';
+  font-family: "Gill Sans", sans-serif;
   font-size: 18px;
   font-style: normal;
   font-weight: 400;

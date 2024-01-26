@@ -20,7 +20,7 @@
 .title-logo>span {
   color: var(--primary-10);
   text-align: center;
-  font-family: 'Public Sans';
+  font-family: "Gill Sans", sans-serif;
   font-size: 32px;
   font-weight: 600;
   line-height: 32px;
@@ -35,7 +35,7 @@
 
 .content>span {
   color: var(--primary-10);
-  font-family: 'Public Sans';
+  font-family: "Gill Sans", sans-serif;
   font-size: 36px;
   font-weight: 600;
   line-height: 32px;
@@ -95,7 +95,59 @@
 }
 
 .status-chips.not_defined {
-  color: var(--primary-10);
+  color: var(--neutral-100);
   border-color: var(--neutral-70);
   background: var(--neutral-40);
+}
+
+.validate-image-container {
+  display: flex;
+  padding: 16px;
+  flex-direction: column;
+  gap: 24px;
+  border-radius: 16px;
+  background: var(--neutral-100);
+  box-shadow: var(--elevation-main);
+}
+
+.validate-image-container>.title {
+  display: flex;
+  justify-content: space-between;
+}
+
+.validate-image-container>.title>span {
+  color: var(--primary-10);
+  font-family: "Gill Sans", sans-serif;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 28px;
+}
+
+.text-area-image {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1 0 0;
+}
+
+.image-button {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1 0 0;
+}
+
+.image-button>img {
+  width: 340px;
+  height: 340px;
+  border-radius: 16px;
+}
+
+.image-button>.button-container {
+  display: flex;
+  padding-top: 16px;
+  justify-content: flex-end;
+  gap: 12px;
+  border-top: 1px solid var(--neutral-70);
 }

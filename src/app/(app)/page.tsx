@@ -2,9 +2,9 @@
 
 import '@/app/(app)/dashboard.css';
 import { logout } from '@/store/adminSlice';
-import { useTypeDispatch } from '@/store/hooks';
+import { useTypeDispatch, useTypeSelector } from '@/store/hooks';
 import SearchIcon from '@mui/icons-material/Search';
-import { Avatar, Menu, MenuItem, MenuList, TextField } from '@mui/material';
+import { Avatar, Button, IconButton, Menu, MenuItem, MenuList, TextField } from '@mui/material';
 import { DataGrid, GridColDef, GridRowsProp } from '@mui/x-data-grid';
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
@@ -12,6 +12,8 @@ import Link from 'next/link';
 import React, { useState } from 'react';
 import axiosBackInstance from '@/services/axiosInstances/axiosBackInstance';
 import { DatagridUser, ListUsersResponse, User } from '@/types/userType';
+import CloseIcon from '@mui/icons-material/Close';
+import { queryClient } from '@/services/queryClient';
 
 const columns: GridColDef[] = [
   { field: 'date', headerName: 'Date', flex: 1, minWidth: 150 },
@@ -41,6 +43,8 @@ export default function Home() {
   const [displayedRows, setDisplayedRows] = useState<GridRowsProp>([]);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [searchValue, setSearchValue] = useState<string>('');
+  const [selectedUser, setSelectedUser] = useState<DatagridUser | null>(null);
+  const { info } = useTypeSelector(state => state.admin);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value.toLowerCase();
@@ -49,9 +53,43 @@ export default function Home() {
     setSearchValue(event.target.value);
   };
 
+  const validateImage = async (uid: string) => {
+    try {
+      const response = await axiosBackInstance.put('/admins/updateUser', {
+        uid,
+        selfieStatus: 'validated',
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('swafe-admin')}`,
+        },
+      });
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const refuseImage = async (uid: string) => {
+    try {
+      const response = await axiosBackInstance.put('/admins/updateUser', {
+        uid,
+        selfieStatus: 'refused',
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('swafe-admin')}`,
+        },
+      });
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useQuery({
     queryKey: ['users'],
-    staleTime: 5 * 60 * 1000,
+    staleTime: 1, // 5 * 60 * 1000
     queryFn: async () => {
       try {
         const response = await axiosBackInstance.get<ListUsersResponse>('/admins/userList', {
@@ -60,7 +98,13 @@ export default function Home() {
             Authorization: `Bearer ${localStorage.getItem('swafe-admin')}`,
           },
         });
-        const rows = response.data.data.map((user) => ({ id: user.uid, date: user.createdAt, name: `${user.firstName} ${user.lastName}`, image: user.selfie, status: user.selfieStatus })) as DatagridUser[];
+        const rows = response.data.data.map((user) => ({
+          id: user.uid,
+          date: new Date(user.createdAt).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' }),
+          name: `${user.firstName} ${user.lastName}`,
+          image: user.selfie,
+          status: user.selfieStatus
+        })) as DatagridUser[];
         setRows(rows);
         setDisplayedRows(rows);
         setSearchValue('');
@@ -85,14 +129,13 @@ export default function Home() {
             height: '40px',
             background: 'var(--secondary-80)',
             color: 'var(--primary-10)',
-            fontFamily: 'Public Sans',
             fontSize: '14px',
             fontWeight: 600,
             lineHeight: '24px',
           }}
           onClick={(e) => setAnchorEl(e.currentTarget)}
         >
-          RG
+          {info!.firstName[0].toLocaleUpperCase() + info!.lastName[0].toLocaleUpperCase()}
         </Avatar>
         <Menu
           sx={{ padding: 0 }}
@@ -127,7 +170,13 @@ export default function Home() {
               />
             </div>
             <DataGrid
-              sx={{ maxHeight: 'calc(100vh - 380px)', minHeight: '163px' }}
+              sx={{
+                maxHeight: 'calc(100vh - 380px)',
+                minHeight: '163px',
+                borderRadius: '0',
+                border: 0,
+                borderTop: '1px solid rgba(224, 224, 224, 1)',
+              }}
               rows={displayedRows}
               columns={columns}
               initialState={{
@@ -139,11 +188,82 @@ export default function Home() {
                 }
               }}
               pageSizeOptions={[10, 25, 50]}
+              onRowClick={(params) => setSelectedUser(params.row as DatagridUser)}
               pagination
             />
           </div>
+          {selectedUser && (
+            <div className='validate-image-container'>
+              <div className='title'>
+                <span>Vérification des photos</span>
+                <IconButton
+                  onAbort={() => setSelectedUser(null)}
+                  sx={{
+                    borderRadius: '8px',
+                    background: 'var(--neutral-100)',
+                    boxShadow: 'var(--elevation-button)',
+                  }}
+                >
+                  <CloseIcon />
+                </IconButton>
+              </div>
+              <div className='text-area-image'>
+                <TextField
+                  value="[Nom] doit faire le V de victoire avec ses doigts : ✌️"
+                  label="Consigne"
+                  variant="outlined"
+                  InputProps={{ readOnly: true, }}
+                />
+                <div className='image-button'>
+                  {selectedUser.image ? (<img src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/get-selfie/${selectedUser.image}`} alt="Selfie de l'utilisateur" />) : (<span>Aucune image</span>)}
+                  <div className='button-container'>
+                    <Button
+                      onClick={() => refuseImage(selectedUser.id)}
+                      disableElevation
+                      variant='outlined'
+                      sx={{
+                        display: 'flex',
+                        padding: '10px 17px',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        borderRadius: '8px',
+                        border: '2px solid var(--secondary-40)',
+                        background: 'var(--neutral-100)',
+                        color: 'var(--secondary-40)',
+                        fontSize: '14px',
+                        lineHeight: '20px',
+                        '&:hover': {
+                          background: 'var(--secondary-80)',
+                          border: '2px solid var(--secondary-40)'
+                        }
+                      }}
+                    >Invalider</Button>
+                    <Button
+                      onClick={() => validateImage(selectedUser.id)}
+                      disableElevation
+                      variant='contained'
+                      sx={{
+                        display: 'flex',
+                        padding: '10px 17px',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        borderRadius: '8px',
+                        background: 'var(--secondary-40)',
+                        color: 'var(--neutral-100)',
+                        fontSize: '14px',
+                        lineHeight: '20px',
+                        '&:hover': {
+                          background: 'var(--secondary-30)',
+                        }
+                      }}
+                    >Valider</Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
-    </section>
+    </section >
   );
 }
