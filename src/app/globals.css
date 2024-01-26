@@ -2,45 +2,24 @@
 @import "reset-css.css";
 
 :root {
-  /* App elevation */
-  --elevation-main: 0px 4px 4px 0px rgba(0, 0, 0, 0.25), 0px -1px 6px 0px rgba(0, 0, 0, 0.12);
-
-  /* Spacing */
-  --space4: 4px;
-  --space8: 8px;
-  --space12: 12px;
-  --space16: 16px;
-  --space20: 20px;
-  --space24: 24px;
-  --space28: 28px;
-  --space32: 32px;
-
-  --dark-50: #F1F2F3;
-  --dark-75: #DEE0E3;
-  --dark-100: #AEB1B7;
-  --dark-200: #868A93;
-  --dark-300: #75767F;
-  --dark-400: #60616C;
-  --dark-500: #4B4D58;
-  --dark-600: #3B3C45;
-  --dark-700: #2F2F37;
-  --dark-800: #212126;
-  --dark-900: #101014;
-
-  --identity-300: #DADDFC;
-  --identity-400: #4D59EF;
-  --identity-500: #1423DC;
-  --identity-700: #070D4F;
-
-  --interface3-400: #F19F7E;
-
-  --interface6-200: #E8E9F8;
-  --interface6-300: #B9BCE9;
-  --interface6-400: #3841B7;
-  --interface6-500: #232873;
-  --interface6-600: #1A1E56;
+  --elevation-main: 0px 2px 6px 2px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.30);
+  --error-40: #BA1A1A;
+  --error-50: #DE3730;
+  --neutral-100: #FFFFFF;
+  --neutral-40: #71787E;
+  --neutral-70: #B8BBBE;
+  --neutral-80: #EDEDED;
+  --neutral-90: #F8F8F8;
+  --primary-10: #032041;
+  --secondary-40: #714DD8;
+  --secondary-80: #DFD5FF;
+  --success-50: #B6D265;
+  --success-60: #C6DC87;
+  --tertiary-80: #E9F6FF;
+  --warn-50: #F1BA33;
+  --warn-60: #F4CB66;
 }
 
 body {
-  background-color: var(--dark-800);
+  background-color: #F4F7FF;
 }

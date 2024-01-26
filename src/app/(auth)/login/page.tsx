@@ -8,7 +8,6 @@ import { Visibility, VisibilityOff } from '@mui/icons-material'
 import CloseIcon from '@mui/icons-material/Close'
 import { Alert, AlertColor, Button, CircularProgress, FormControl, IconButton, Input, TextField } from '@mui/material'
 import { useMutation } from '@tanstack/react-query'
-import { AxiosError } from 'axios'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
@@ -87,17 +86,13 @@ export default function Login() {
   return (
     <section id="loginSection" className="section-login">
       <form className="form-login" onSubmit={submitForm}>
-        <div className="logo-container">
+        <div className='title-logo'>
           <Image
+            src='logo_dark.svg' alt='Swafe logo'
             width={40}
             height={40}
-            className="logo-icon"
-            src="/logo_dark.svg"
-            alt="Swafe logo"
           />
-          <span className="logo-text">
-            <span className="line">Swafe Admin</span>
-          </span>
+          <span>Swafe Admin</span>
         </div>
 
         <span className="subtitle-login">
