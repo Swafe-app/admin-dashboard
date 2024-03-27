@@ -106,6 +106,7 @@
   flex-direction: column;
   gap: 24px;
   border-radius: 16px;
+  min-width: 372px;
   background: var(--neutral-100);
   box-shadow: var(--elevation-main);
 }
@@ -139,8 +140,10 @@
 }
 
 .image-button>img {
-  width: 340px;
-  height: 340px;
+  width: auto;
+  height: auto;
+  max-width: 340px;
+  max-height: 460px;
   border-radius: 16px;
 }
 

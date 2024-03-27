@@ -23,7 +23,8 @@ export type ListUsersResponse = {
 
 export type DatagridUser = {
   id: string
-  date: string
+  createdAt: string
+  updatedAt: string
   name: string
   image: string
   status: string

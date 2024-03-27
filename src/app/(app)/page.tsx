@@ -16,7 +16,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import { queryClient } from '@/services/queryClient';
 
 const columns: GridColDef[] = [
-  { field: 'date', headerName: 'Date', flex: 1, minWidth: 150 },
+  { field: 'createdAt', headerName: 'Date de création', flex: 1, minWidth: 150 },
+  { field: 'updatedAt', headerName: 'Date de modification', flex: 1, minWidth: 150 },
   { field: 'name', headerName: 'Nom', flex: 1, minWidth: 150 },
   {
     field: 'image', headerName: 'Image', flex: 1, minWidth: 150,
@@ -100,7 +101,8 @@ export default function Home() {
         });
         const rows = response.data.data.map((user) => ({
           id: user.uid,
-          date: new Date(user.createdAt).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' }),
+          createdAt: new Date(user.createdAt).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' }),
+          updatedAt: new Date(user.updatedAt).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' }),
           name: `${user.firstName} ${user.lastName}`,
           image: user.selfie,
           status: user.selfieStatus
@@ -184,7 +186,7 @@ export default function Home() {
                   paginationModel: { pageSize: 10 }
                 },
                 sorting: {
-                  sortModel: [{ field: 'date', sort: 'desc' }]
+                  sortModel: [{ field: 'updatedAt', sort: 'desc' }]
                 }
               }}
               pageSizeOptions={[10, 25, 50]}
@@ -192,76 +194,94 @@ export default function Home() {
               pagination
             />
           </div>
-          {selectedUser && (
-            <div className='validate-image-container'>
-              <div className='title'>
-                <span>Vérification des photos</span>
-                <IconButton
-                  onAbort={() => setSelectedUser(null)}
-                  sx={{
-                    borderRadius: '8px',
-                    background: 'var(--neutral-100)',
-                    boxShadow: 'var(--elevation-button)',
-                  }}
-                >
-                  <CloseIcon />
-                </IconButton>
-              </div>
-              <div className='text-area-image'>
-                <TextField
-                  value="[Nom] doit faire le V de victoire avec ses doigts : ✌️"
-                  label="Consigne"
-                  variant="outlined"
-                  InputProps={{ readOnly: true, }}
-                />
-                <div className='image-button'>
-                  {selectedUser.image ? (<img src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/get-selfie/${selectedUser.image}`} alt="Selfie de l'utilisateur" />) : (<span>Aucune image</span>)}
-                  <div className='button-container'>
-                    <Button
-                      onClick={() => refuseImage(selectedUser.id)}
-                      disableElevation
-                      variant='outlined'
-                      sx={{
-                        display: 'flex',
-                        padding: '10px 17px',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        borderRadius: '8px',
-                        border: '2px solid var(--secondary-40)',
-                        background: 'var(--neutral-100)',
-                        color: 'var(--secondary-40)',
-                        fontSize: '14px',
-                        lineHeight: '20px',
-                        '&:hover': {
-                          background: 'var(--secondary-80)',
-                          border: '2px solid var(--secondary-40)'
-                        }
-                      }}
-                    >Invalider</Button>
-                    <Button
-                      onClick={() => validateImage(selectedUser.id)}
-                      disableElevation
-                      variant='contained'
-                      sx={{
-                        display: 'flex',
-                        padding: '10px 17px',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        borderRadius: '8px',
-                        background: 'var(--secondary-40)',
-                        color: 'var(--neutral-100)',
-                        fontSize: '14px',
-                        lineHeight: '20px',
-                        '&:hover': {
-                          background: 'var(--secondary-30)',
-                        }
-                      }}
-                    >Valider</Button>
-                  </div>
+          <div className='validate-image-container'>
+            <div className='title'>
+              <span>Vérification des photos</span>
+              <IconButton
+                onClick={() => setSelectedUser(null)}
+                sx={{
+                  borderRadius: '8px',
+                  background: 'var(--neutral-100)',
+                  boxShadow: 'var(--elevation-button)',
+                }}
+              >
+                <CloseIcon />
+              </IconButton>
+            </div>
+            <div className='text-area-image'>
+              {/* <TextField
+                value="[Nom] doit faire le V de victoire avec ses doigts : ✌️"
+                label="Consigne"
+                variant="outlined"
+                InputProps={{ readOnly: true, }}
+              /> */}
+              <div className='image-button'>
+                {(selectedUser && selectedUser.image) ? (
+                  <img
+                    src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/get-selfie/${selectedUser.image}`}
+                    alt="Selfie de l'utilisateur"
+                  />
+                  ) : (
+                  <div
+                    style={{
+                      fontFamily: "Gill Sans, sans-serif",
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      width: '340px',
+                      height: '340px',
+                      background: 'var(--neutral-80)',
+                      borderRadius: '8px',
+                    }}
+                  >Image non disponible</div>
+                  )}
+                <div className='button-container'>
+                  <Button
+                    disabled={!selectedUser}
+                    onClick={() => selectedUser && refuseImage(selectedUser.id)}
+                    disableElevation
+                    variant='outlined'
+                    sx={{
+                      display: 'flex',
+                      padding: '10px 17px',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      borderRadius: '8px',
+                      border: '2px solid var(--secondary-40)',
+                      background: 'var(--neutral-100)',
+                      color: 'var(--secondary-40)',
+                      fontSize: '14px',
+                      lineHeight: '20px',
+                      '&:hover': {
+                        background: 'var(--secondary-80)',
+                        border: '2px solid var(--secondary-40)'
+                      }
+                    }}
+                  >Invalider</Button>
+                  <Button
+                    disabled={!selectedUser}
+                    onClick={() => selectedUser && validateImage(selectedUser.id)}
+                    disableElevation
+                    variant='contained'
+                    sx={{
+                      display: 'flex',
+                      padding: '10px 17px',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      borderRadius: '8px',
+                      background: 'var(--secondary-40)',
+                      color: 'var(--neutral-100)',
+                      fontSize: '14px',
+                      lineHeight: '20px',
+                      '&:hover': {
+                        background: 'var(--secondary-30)',
+                      }
+                    }}
+                  >Valider</Button>
                 </div>
               </div>
             </div>
-          )}
+          </div>
         </div>
       </div>
     </section >
